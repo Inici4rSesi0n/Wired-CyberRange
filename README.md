@@ -12,7 +12,7 @@ Laboratorio reproducible de pentesting construido con **Podman rootless**. Simul
 
 Diseñado para practicar técnicas de **Red Team**, documentar hallazgos con **CVSS** y mapeo **MITRE ATT&CK**, y servir como base para un framework de automatización.
 
-> ℹ️ **Estado del repositorio:** público (pendiente de publicación) · **Versión:** `lab-v1.0`
+> ℹ️ **Estado del repositorio:** publicado · **Versión:** `lab-v1.0` . **Licencia:** GPLv3
 
 ---
 
