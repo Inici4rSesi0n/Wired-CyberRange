@@ -1,0 +1,90 @@
+version: '3.8'
+
+networks:
+  wired-net:
+    external: true
+
+services:
+  attacker:
+    build:
+      context: ../containers/wired
+      dockerfile: Containerfile
+    image: localhost/wired:latest
+    container_name: inici4rsesi0n_wired
+    hostname: inici4rsesi0n_wired
+    networks:
+      wired-net:
+        ipv4_address: ${ATTACKER_IP}
+    volumes:
+      - ../volumes/wired/scripts:/opt/scripts:rw
+      - ../volumes/wired/evidence:/opt/evidence:rw
+      - ../volumes/wired/reports:/opt/reports:rw
+      - ${NVIM_CONFIG_PATH}:/root/.config/nvim:rw
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    tty: true
+    stdin_open: true
+    command: ["/bin/bash"]
+    environment:
+      - LAB_PROFILE=full
+      - TARGET_DVWA=${DVWA_IP}
+      - TARGET_JUICE=${JUICE_SHOP_IP}
+      - TARGET_METASPLOITABLE=${METASPLOITABLE_IP}
+      - TARGET_SAMBA=${SAMBA_IP}
+
+  dvwa:
+    image: ${DVWA_IMAGE}
+    container_name: dvwa
+    hostname: dvwa
+    networks:
+      wired-net:
+        ipv4_address: ${DVWA_IP}
+    ports:
+      - "${DVWA_HOST_PORT}:80"
+    environment:
+      - MYSQL_PASS=dvwa
+
+  juice-shop:
+    image: ${JUICE_SHOP_IMAGE}
+    container_name: juice-shop
+    hostname: juice-shop
+    networks:
+      wired-net:
+        ipv4_address: ${JUICE_SHOP_IP}
+    ports:
+      - "${JUICE_SHOP_HOST_PORT}:3000"
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=3000
+
+  metasploitable:
+    image: ${METASPLOITABLE_IMAGE}
+    container_name: metasploitable
+    hostname: metasploitable
+    networks:
+      wired-net:
+        ipv4_address: ${METASPLOITABLE_IP}
+    tty: true
+    stdin_open: true
+    restart: "no"
+
+  samba:
+    image: ${SAMBA_IMAGE}
+    container_name: samba
+    hostname: samba
+    networks:
+      wired-net:
+        ipv4_address: ${SAMBA_IP}
+    volumes:
+      - ../volumes/samba/shares:/share
+    environment:
+      - USERID=1000
+      - GROUPID=1000
+    command: >
+      -u "labuser;labpass"
+      -s "public;/share;yes;no;yes;all"
+      -s "workfiles;/share/workfiles;yes;no;no;labuser"
+      -p
+    restart: "no"

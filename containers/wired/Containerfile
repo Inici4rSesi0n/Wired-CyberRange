@@ -1,0 +1,37 @@
+FROM docker.io/kalilinux/kali-rolling:latest
+
+LABEL maintainer="inici4rsesi0n"
+LABEL description="Contenedor atacante wired-lab - Kali + Metasploit"
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG=C.UTF-8
+ENV EDITOR=nvim
+ENV VISUAL=nvim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nmap masscan netcat-traditional dnsutils whois dnsrecon \
+    enum4linux smbclient nbtscan \
+    nikto ffuf dirb sqlmap \
+    metasploit-framework exploitdb hydra john hashcat \
+    tshark tcpdump ettercap-text-only \
+    theharvester recon-ng \
+    git curl wget neovim ripgrep fd-find \
+    python3 python3-pip python3-venv \
+    jq tree iputils-ping iproute2 net-tools \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --no-cache-dir --break-system-packages \
+    python-nmap requests jinja2 pyyaml
+
+RUN mkdir -p /opt/scripts /opt/evidence /opt/reports /root/wordlists
+
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+COPY tools.txt /opt/tools.txt
+
+WORKDIR /opt/scripts
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["/bin/bash"]

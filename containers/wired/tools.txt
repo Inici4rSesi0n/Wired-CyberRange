@@ -1,0 +1,13 @@
+================================================================================
+HERRAMIENTAS DISPONIBLES EN EL CONTENEDOR ATACANTE
+================================================================================
+
+RECONOCIMIENTO:     nmap, masscan, nc, dig, whois, dnsrecon
+ENUMERACION SMB:    enum4linux, smbclient, nbtscan
+WEB:                nikto, ffuf, dirb, sqlmap
+EXPLOTACION:        metasploit-framework, exploitdb, hydra, john, hashcat
+TRAFICO:            tshark, tcpdump, ettercap
+OSINT:              theharvester, recon-ng
+PYTHON:             python-nmap, requests, jinja2, pyyaml
+UTILIDADES:         git, curl, wget, vim, nano, jq, tree
+================================================================================

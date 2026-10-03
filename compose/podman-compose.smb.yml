@@ -1,0 +1,62 @@
+version: '3.8'
+
+networks:
+  wired-net:
+    external: true
+
+services:
+  attacker:
+    build:
+      context: ../containers/wired
+      dockerfile: Containerfile
+    image: localhost/wired:latest
+    container_name: inici4rsesi0n_wired
+    hostname: inici4rsesi0n_wired
+    networks:
+      wired-net:
+        ipv4_address: ${ATTACKER_IP}
+    volumes:
+      - ../volumes/wired/scripts:/opt/scripts:rw
+      - ../volumes/wired/evidence:/opt/evidence:rw
+      - ../volumes/wired/reports:/opt/reports:rw
+      - ${NVIM_CONFIG_PATH}:/root/.config/nvim:rw
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    tty: true
+    stdin_open: true
+    command: ["/bin/bash"]
+    environment:
+      - LAB_PROFILE=smb
+      - TARGET_METASPLOITABLE=${METASPLOITABLE_IP}
+      - TARGET_SAMBA=${SAMBA_IP}
+
+  metasploitable:
+    image: ${METASPLOITABLE_IMAGE}
+    container_name: metasploitable
+    hostname: metasploitable
+    networks:
+      wired-net:
+        ipv4_address: ${METASPLOITABLE_IP}
+    tty: true
+    stdin_open: true
+    restart: "no"
+
+  samba:
+    image: ${SAMBA_IMAGE}
+    container_name: samba
+    hostname: samba
+    networks:
+      wired-net:
+        ipv4_address: ${SAMBA_IP}
+    volumes:
+      - ../volumes/samba/shares:/share
+    environment:
+      - USERID=1000
+      - GROUPID=1000
+    command: >
+      -u "labuser;labpass"
+      -s "public;/share;yes;no;yes;all"
+      -s "workfiles;/share/workfiles;yes;no;no;labuser"
+      -p
+    restart: "no"

@@ -1,0 +1,39 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment
+.env
+.env.local
+*.env.bak
+
+# Evidence and reports (generated at runtime)
+volumes/wired/evidence/*
+volumes/wired/reports/*
+!volumes/wired/evidence/.gitkeep
+!volumes/wired/reports/.gitkeep
+
+# Podman / network captures
+*.pcap
+*.log
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Shell history and state inside containers
+.bash_history
+**/.bash_history
+.local/
+**/.local/
+nvim.log
+**/nvim.log
